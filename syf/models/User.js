@@ -81,7 +81,7 @@ const userSchema = new Schema({
 	plan: {
 		type: String,
 		required: true,
-		enum: ['TRIAL', 'SUSCRIPTOR'],
+		enum: ['TRIAL', 'TRIAL-EXPIRADA', 'SUSCRIPTOR'],
 		default: 'TRIAL'
 	},
 	parent: {

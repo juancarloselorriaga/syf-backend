@@ -105,8 +105,8 @@ exports.deleteUser = (req, res) => {
         text: "Imposible eliminar, usuario inexistente"
       });
     }
-    if (user) {
-      //Si existe, primero busca al padre para eliminar la relación
+    if (user.role === 'EMPLEADO') {
+      //Si existe, primero busca al padre (en caso de ser empleado) para eliminar la relación
       User.findOne(user.parent, (err, parent) => {
         parent.removeEmployee(user)
       })
@@ -116,7 +116,6 @@ exports.deleteUser = (req, res) => {
         _id: req.params.id
       })
         .then(user => {
-          
           res.status(200).json({
             text: "Usuario eliminado con éxito",
             data: user
@@ -129,8 +128,84 @@ exports.deleteUser = (req, res) => {
           });
         });
     }
+
+    if(user.role === 'AGENTE'){
+      //Si existe, primero elimina todas las cuentas de empleado.
+      let empleados = user.employees
+
+      empleados.forEach(e => {
+        User.findOne(e.userId, (err, child) => {
+          User.findByIdAndRemove(child)
+          .then(deletedChild => {})
+          .catch(err => {
+            res.status(500).json({
+              text: "Error en el servidor",
+              error: err
+            });
+          });
+        })
+      })
+
+      //Después, elimina al agente
+
+      User.findByIdAndRemove({
+        _id: req.params.id
+      })
+        .then(user => {
+          res.status(200).json({
+            text: "Usuario eliminado con éxito",
+            data: user
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            text: "Error en el servidor",
+            error: err
+          });
+        });
+
+    }
+
   });
 };
+
+
+
+// // Eliminar un usuario por _id de Mongo => DELETE
+// exports.deleteUser = (req, res) => {
+//   User.findOne({ _id: req.params.id }, (err, user) => {
+//     if (err) {
+//       //Si no existe, manda error
+//       res.status(500).json({
+//         text: "Imposible eliminar, usuario inexistente"
+//       });
+//     }
+//     if (user) {
+//       //Si existe, primero busca al padre (en caso de ser empleado) para eliminar la relación
+//       User.findOne(user.parent, (err, parent) => {
+//         parent.removeEmployee(user)
+//       })
+      
+//       //Después, elimina la cuenta del empleado
+//       User.findByIdAndRemove({
+//         _id: req.params.id
+//       })
+//         .then(user => {
+          
+//           res.status(200).json({
+//             text: "Usuario eliminado con éxito",
+//             data: user
+//           });
+//         })
+//         .catch(err => {
+//           res.status(500).json({
+//             text: "Error en el servidor",
+//             error: err
+//           });
+//         });
+//     }
+//   });
+// };
 
 // Buscar un usuario por mail => ..users/search?email=doe@gmail.com => GET
 exports.searchUserBy = (req, res) => {
