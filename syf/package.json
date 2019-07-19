@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "test"
+    "test": "test",
+    "debug": "node --inspect-brk app.js"
   },
   "author": "juancarloselorriaga",
   "license": "ISC",

@@ -8,42 +8,88 @@ const userSchema = new Schema({
 		unique: true
 	},
 	password: {
-		type: String,
-		required: true
-	},
-  name: {
-		type: String,
-		required: true
-	},
-  lastName: {
-		type: String,
-		required: true
+		type: String
 	},
 	email: {
 		type: String,
 		required: true,
 		unique: true
 	},
-	googleId: String,
+	info: {
+		fullName: {
+			type: String,
+			required: false,
+			default: 'Usuario'
+		},
+		birthdate: {
+			type: Date,
+			required: false
+		},
+		address: {
+				street: {
+					type: String,
+					required: false
+				},
+				number: {
+					type: String,
+					required: false
+				},
+				neighborhood: {
+					type: String,
+					required: false
+				},
+				municipality: {
+					type: String,
+					required: false
+				},
+				state: {
+					type: String,
+					required: false
+				},
+				cp: {
+					type: String,
+				}
+		},
+		phone: {
+			type: String,
+			required: false
+		},
+		mobile: {
+			type: String,
+			required: false
+		},
+		rfc: {
+			type: String,
+			required: false
+		}
+	},
 	role: {
 		type: String,
 		required: true,
 		enum: ['AGENTE', 'EMPLEADO', 'ADMIN'],
 		default: 'AGENTE'
 	},
-	loginAttempts: Number,
+	employees: [
+		{ type: Schema.Types.ObjectId, ref: 'User' }
+	],
 	isActive: {
 		type: Boolean,
 		default: true
 	},
-	isPremium: {
-		type: Boolean,
-		default: false
+	plan: {
+		type: String,
+		required: true,
+		enum: ['TRIAL', 'PREMIUM'],
+		default: 'TRIAL'
 	}
-}, {
+},
+{
 	timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 });
 
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
+
+
