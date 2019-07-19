@@ -106,11 +106,17 @@ exports.deleteUser = (req, res) => {
       });
     }
     if (user) {
-      //Si existe, elimina al usuario
+      //Si existe, primero busca al padre para eliminar la relación
+      User.findOne(user.parent, (err, parent) => {
+        parent.removeEmployee(user)
+      })
+      
+      //Después, elimina la cuenta del empleado
       User.findByIdAndRemove({
         _id: req.params.id
       })
         .then(user => {
+          
           res.status(200).json({
             text: "Usuario eliminado con éxito",
             data: user
@@ -153,36 +159,54 @@ exports.searchUserBy = (req, res) => {
 };
 
 // Crear un usuario 'empleado', asignado a un usuario 'agente'
-
 exports.addEmployee = (req, res) => {
 
-  let newUser = new User();
+  // Pasar el ID por la ruta para poder hacer un findone y asignarle este usuario nuevo con un push a sus empleados.
 
-  console.log(newUser)
-
-  newUser.username      = req.body.username;
-  newUser.email         = req.body.email;
-  newUser.info.fullName = req.body.info.fullName;
-  newUser.role          = 'EMPLEADO'
-
-  newUser.save()
-  .then(doc => {
-    if(!doc || doc.length === 0) {
-      return res.status(500).json({
-        text: 'No se pudo crear el usuario'
-      })
+  User.findOne({ _id: req.params.id }, (err, user) => {
+    if (err) {
+      // Si no existe, manda error
+      res.status(500).json({
+        text: "Imposible añadir empleados, usuario inexistente"
+      });
     }
+    if (user) {
+      // Si existe, crea un nuevo empleado
+      let newUser = new User();
 
-    res.status(200).json({
-      text: 'Empleado creado con éxito',
-      data: doc
-    })
-  })
-  .catch(err => {
-    res.status(500).json({
-      text: "Error en el servidor",
-      error: err
-    })
+      newUser.username      = req.body.username;
+      newUser.email         = req.body.email;
+      newUser.info.fullName = req.body.info.fullName;
+      newUser.role          = 'EMPLEADO'
+      newUser.employees     =  null
+      newUser.parent        = req.params.id
+      newUser.isActive      = user.isActive
+      newUser.plan          = user.plan
+    
+      newUser.save()
+      
+      .then(newEmployee => {
+        if(!newEmployee || newEmployee.length === 0) {
+          return res.status(500).json({
+            text: 'No se pudo crear el usuario'
+          })
+        }
+
+        //Y después se relaciona el nuevo empleado con su creador
+        user.addEmployee(newEmployee)
+        res.status(200).json({
+          text: 'Empleado creado con éxito',
+          data: newEmployee
+        })
+      })
+      .catch(err => {
+        res.status(500).json({
+          text: "Error en el servidor",
+          error: err
+        })
+      })
+
+    }
   })
 };
 

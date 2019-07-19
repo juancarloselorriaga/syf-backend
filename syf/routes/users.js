@@ -3,9 +3,6 @@ const router    = express.Router();
 
 const usersController = require('../controllers/users')
 
-// Crea un nuevo empleado y ¿lo asigna a un usuario padre?
-router.post('/add-employee', usersController.addEmployee)
-
 // Crear un nuevo usuario
 router.post('/add-user', usersController.addUser)
 
@@ -20,6 +17,9 @@ router.put('/:id', usersController.editUser)
 
 // Eliminar un usuario por _id de Mongo
 router.delete('/:id', usersController.deleteUser)
+
+// Crea un nuevo empleado y lo asigna a un usuario padre a través de su ID
+router.post('/:id/add-employee', usersController.addEmployee)
 
 // Consultar todos los usuarios disponibles
 router.get('/', usersController.getAllUsers)

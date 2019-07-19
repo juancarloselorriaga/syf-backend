@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express    = require('express');
 const logger     = require('morgan');
 const bodyParser = require('body-parser');
@@ -7,7 +9,7 @@ const app = express();
 
 //Connecting to the db
 mongoose
-.connect('mongodb://localhost/syf', {useNewUrlParser: true})
+.connect(`${process.env.DB_HOST}`, {useNewUrlParser: true})
 .then(x => {
   console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
 })
