@@ -44,7 +44,12 @@ const userSchema = new Schema(
       {
         userId: { type: Schema.Types.ObjectId, ref: "User" }
       }
-    ],
+		],
+		companies: [
+			{
+				companyId: { type: Schema.Types.ObjectId, ref: "Company"}
+			}
+		],
     isActive: {
       type: Boolean,
       default: true
@@ -184,6 +189,6 @@ userSchema.methods.checkRoleAndDelete = function(req, res, user) {
   }
 };
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/Setup/User");
 
 // Consultar todos los usuarios disponibles => GET
 exports.getAllUsers = (req, res) => {

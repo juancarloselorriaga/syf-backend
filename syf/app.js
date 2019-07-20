@@ -23,10 +23,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 //Routes
-const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/users');
 
-app.use('/admin', adminRoutes);
 app.use('/users', userRoutes);
 
 //Public
