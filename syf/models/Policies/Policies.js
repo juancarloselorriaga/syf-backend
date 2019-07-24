@@ -4,16 +4,15 @@ const Schema = mongoose.Schema;
 const policySchema = new Schema(
   {
     _buyer: {
-      type: String,
-      required: true
+      type: String
     },
     _insured: {
-      type: String,
-      required: true
+      type: String
     },
     _policyNumber: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     address: {
       street: String,
@@ -24,8 +23,11 @@ const policySchema = new Schema(
       cp: String,
       additionalInfo: String
     },
-    company: { type: Schema.Types.ObjectId, ref: 'Company'},
-    class: { type: Schema.Types.ObjectId, ref: 'PolicyClass'},
+    company: String,
+    class: {
+      title: String,
+      key: String,
+    },
     issuanceDate: {
       type: Date,
       required: true
@@ -36,19 +38,18 @@ const policySchema = new Schema(
     },
     paymentType: {
       type: String,
-      enum: ['MENSUAL', 'TRIMESTRAL', 'SEMESTRAL', 'ANUAL'],
+      enum: ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
       required: true
     },
-    factor: { type: Schema.Types.ObjectId, ref: 'Factor'},
     paymentMethod:{
       type: String,
-      enum: ['AGENTE', 'CARGO_AUTOMATICO', 'VIA_TELEFONICA'],
+      enum: ['Agente', 'Cargo automático', 'Vía telefónica'],
       required: true
     },
     paymentStatus: {
       type: String,
-      enum: ['PAGADO', 'SIN_PAGO', 'VENCIDO'],
-      default: 'SIN_PAGO'
+      enum: ['pagado', 'sin pago', 'vencido'],
+      default: 'sin pago'
     },
     currency:{
       type: String,
@@ -59,10 +60,7 @@ const policySchema = new Schema(
       type: Boolean,
       default: false
     },
-    extraPremiumCause:{
-      type: String,
-      enum: ['OCUPACION', 'SALUD', 'OCUPACION_Y_SALUD']
-    },
+    extraPremiumCause: String,
     type: {
       type: String,
       enum: ['SEGURO', 'FIANZA'],
@@ -81,13 +79,13 @@ const policySchema = new Schema(
         type: String,
         required: true
       },
-      sumInsured: {
-        type: Number,
-        required: true
-      },
-      totalPremium: Number,
+      sumInsured: [ {
+        concept: { conceptTitle: String, conceptCost: String }
+      }
+      ],
+      totalPremium: String,
       netPremium: {
-        type: Number,
+        type: String,
         required: true
       },
       companyDiscount:{
@@ -104,4 +102,4 @@ const policySchema = new Schema(
 
 const Policy = mongoose.model('Policy', policySchema);
 
-module.exports = Client;
+module.exports = Policy;

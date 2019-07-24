@@ -71,7 +71,7 @@ const userSchema = new Schema(
 );
 
 //Método que se utilizará para asignar nuevos empleados a la cuenta padre.
-userSchema.methods.addEmployee = function(req, res, user) {
+userSchema.methods.addNewEmployee = function(req, res, user) {
   let newUser = new User();
 
   newUser.username = req.body.username;

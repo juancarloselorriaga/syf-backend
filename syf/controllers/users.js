@@ -150,7 +150,7 @@ exports.addEmployee = (req, res) => {
     }
     if (user) {
       // Si existe, crea y asigna al nuevo empleado
-      user.addEmployee(req, res, user)
+      user.addNewEmployee(req, res, user)
     }
   });
 };

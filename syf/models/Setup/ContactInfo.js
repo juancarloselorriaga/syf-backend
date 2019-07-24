@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Client = require("../Client/Client");
 
 const contactInfoSchema = new Schema(
   {
-    _client: Schema.Types.ObjectId, ref: "Client",
-    _company: Schema.Types.ObjectId, ref: "Company",
+    _client: {type: Schema.Types.ObjectId, ref: "Client"},
+    _company: {type: Schema.Types.ObjectId, ref: "Company"},
+    title: String,
     email: String,
     phone: String,
     mobile: String,
