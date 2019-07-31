@@ -32,9 +32,11 @@ app.use((req, res, next) => {
 //Routes
 const userRoutes = require('./routes/users');
 const clientRoutes = require('./routes/clients');
+const contactInfoRoutes = require('./routes/contactInfo');
 
 app.use('/users', userRoutes);
 app.use('/clients', clientRoutes);
+app.use('/contact-info', contactInfoRoutes);
 
 //Public
 app.use(express.static('public'));

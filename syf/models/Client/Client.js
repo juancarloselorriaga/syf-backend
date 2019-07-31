@@ -133,6 +133,20 @@ clientSchema.methods.addNewPolicy = function(req, res, client) {
     });
 };
 
+//Antes de enviar la información de consulta del cliente, limpia las tarjetas de contacto vacías.
+clientSchema.methods.cleanContactInfo = function (req, res, client) {
+
+  let filteredContactInfoArray = client.contactInfo.filter(e => e.contactId !== null)
+
+  this.contactInfo = filteredContactInfoArray;
+
+  this.save();
+  res.status(200).json({
+    text: "Consulta exitosa",
+    data: client
+  });
+}
+
 //Método que se utilizará para asignar nuevas tarjetas de contacto a un cliente
 clientSchema.methods.addNewContact = function(req, res, client) {
   let contactCard = new ContactInfo();

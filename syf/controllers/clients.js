@@ -17,25 +17,37 @@ exports.getAllClients = (req, res) => {
     });
 };
 
-// Consulta un cliente por _id de Mongo => GET
 exports.getOneClient = (req, res) => {
-  Client.findById(req.params.id)
-  .populate('contactInfo.contactId')
-  .populate('policies.policyId')
-    .then(client => {
-      console.log(client)
-      res.status(200).json({
-        text: "Consulta exitosa",
-        data: client
-      });
-    })
-    .catch(err => {
+  Client.findOne({ _id: req.params.id }, (err, client) => {
+    if(err){
       res.status(500).json({
-        text: "Error en el servidor",
-        error: err
-      });
+      text: "Error en el servidor",
+      error: err
     });
-};
+    }
+    if(client){
+      client.cleanContactInfo(req, res, client)
+    }
+}).populate('contactInfo.contactId')
+.populate('policies.policyId');
+}
+
+// Consulta un cliente por _id de Mongo => GET
+// exports.getOneClient = (req, res) => {
+//   Client.findById(req.params.id)
+//   .populate('contactInfo.contactId')
+//   .populate('policies.policyId')
+//     .then(client => {
+//       // client.cleanPolicies(client.policies)
+//       console.log(client)
+//     })
+//     .catch(err => {
+//       res.status(500).json({
+//         text: "Error en el servidor",
+//         error: err
+//       });
+//     });
+// };
 
 // Crear un nuevo cliente => POST
 exports.addClient = (req, res) => {
@@ -45,7 +57,6 @@ exports.addClient = (req, res) => {
     });
   }
 
-  console.log(req.body)
 
   let model = Client(req.body);
   model
