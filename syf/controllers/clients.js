@@ -20,7 +20,10 @@ exports.getAllClients = (req, res) => {
 // Consulta un cliente por _id de Mongo => GET
 exports.getOneClient = (req, res) => {
   Client.findById(req.params.id)
+  .populate('contactInfo.contactId')
+  .populate('policies.policyId')
     .then(client => {
+      console.log(client)
       res.status(200).json({
         text: "Consulta exitosa",
         data: client
@@ -41,6 +44,8 @@ exports.addClient = (req, res) => {
       text: "Falta información: req.body"
     });
   }
+
+  console.log(req.body)
 
   let model = Client(req.body);
   model

@@ -7,7 +7,7 @@ const clientSchema = new Schema(
   {
     personalInfo: {
       name: String,
-      birthdate: Date,
+      birthdate: String,
       maritalStatus: String,
       gender: {
         type: String,
@@ -41,6 +41,7 @@ const clientSchema = new Schema(
         policyId: { type: Schema.Types.ObjectId, ref: "Policy" }
       }
     ],
+    validPolicies: Number,
     type: {
       type: String,
       enum: ["CONTRATANTE", "ASEGURADO"],
@@ -51,6 +52,7 @@ const clientSchema = new Schema(
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
   }
 );
+
 
 //Método que se utilizará para asignar nuevas pólizas a un cliente
 clientSchema.methods.addNewPolicy = function(req, res, client) {
