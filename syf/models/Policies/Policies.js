@@ -94,6 +94,16 @@ const policySchema = new Schema(
       agentDiscount:{
         type: Number
       }
+    },
+    class: {
+      title: {
+        type: String,
+        required: true
+      },
+      key: {
+        type: String,
+        required: true
+      }
     }
   },
   {

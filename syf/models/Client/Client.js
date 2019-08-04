@@ -71,8 +71,8 @@ clientSchema.methods.addNewPolicy = function(req, res, client) {
   policy.address.cp = req.body.address.cp;
   policy.address.additionalInfo = req.body.address.additionalInfo;
   policy.company = req.body.company
-  policy.class.title = req.body.title
-  policy.class.key = req.body.key
+  policy.class.title = req.body.class.title
+  policy.class.key = req.body.class.key
   policy.issuanceDate = req.body.issuanceDate
   policy.expirationDate = req.body.expirationDate
   policy.paymentType = req.body.paymentType
@@ -136,9 +136,15 @@ clientSchema.methods.addNewPolicy = function(req, res, client) {
 //Antes de enviar la información de consulta del cliente, limpia las tarjetas de contacto vacías.
 clientSchema.methods.cleanContactInfo = function (req, res, client) {
 
+  //Borra tarjetas de contacto vacías
   let filteredContactInfoArray = client.contactInfo.filter(e => e.contactId !== null)
 
   this.contactInfo = filteredContactInfoArray;
+
+  //Borra polizas vacías
+  let filteredPolicyArray = client.policies.filter(e => e.policyId !== null)
+
+  this.policies = filteredPolicyArray;
 
   this.save();
   res.status(200).json({
