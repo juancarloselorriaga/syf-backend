@@ -100,6 +100,23 @@ const policySchema = new Schema(
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
   })
 
+  policySchema.methods.deletePolicyItem = function(req, res, policy) {
+
+    Policy.findByIdAndRemove(policy._id)
+          .then(deletedContactCard => {
+            res.status(200).json({
+              text: "Tarjeta de contacto eliminada con éxito",
+              data: deletedContactCard
+            });
+          })
+          .catch(err => {
+            res.status(500).json({
+              text: "Error, no se encuentra la tarjeta",
+              error: err
+            });
+          });
+  }
+
 const Policy = mongoose.model('Policy', policySchema);
 
 module.exports = Policy;

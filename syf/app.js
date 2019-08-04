@@ -33,10 +33,12 @@ app.use((req, res, next) => {
 const userRoutes = require('./routes/users');
 const clientRoutes = require('./routes/clients');
 const contactInfoRoutes = require('./routes/contactInfo');
+const policyRoutes = require('./routes/policies');
 
 app.use('/users', userRoutes);
 app.use('/clients', clientRoutes);
 app.use('/contact-info', contactInfoRoutes);
+app.use('/policies', policyRoutes);
 
 //Public
 app.use(express.static('public'));
