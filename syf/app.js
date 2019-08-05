@@ -46,6 +46,25 @@ app.use(express.static('public'));
 //Errors
 const errorController = require('./controllers/errors')
 
+//Handler 422 - Validaciones de archivo
+
+app.use(function(err, req, res, next){
+
+  if(err.code == 'LIMIT_FILE_TYPES') {
+    res.status(422).json({
+      err: `Error: solo se permiten archivos png, jpeg y PDF.`
+    });
+    return;
+  }
+
+  if(err.code == 'LIMIT_FILE_SIZE') {
+    res.status(422).json({
+      err: `Archivo muy grande. El tamaño máximo es de 2 MB`
+    });
+    return;
+  }
+})
+
 //Handler error 404 - Resource not found
 app.use(errorController.get404)
 

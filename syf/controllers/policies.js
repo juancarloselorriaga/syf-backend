@@ -56,3 +56,15 @@ exports.editPolicy = (req, res) => {
     }
   })
 };
+
+// Añadir archivos a la póliza
+exports.addFile = (req, res) => {
+ res.status(200).json({
+   file: req.file
+ })
+};
+
+// Consultar archivos de la póliza
+exports.getFiles = (req, res) => {
+
+};

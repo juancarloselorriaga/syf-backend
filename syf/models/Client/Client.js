@@ -28,7 +28,10 @@ const clientSchema = new Schema(
       curp: String
     },
     medicalInfo: {
-      isSmoker: Boolean,
+      isSmoker: {
+        type: Boolean,
+        default: false
+      },
       diseases: [
       ]
     },

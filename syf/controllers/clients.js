@@ -32,23 +32,6 @@ exports.getOneClient = (req, res) => {
 .populate('policies.policyId');
 }
 
-// Consulta un cliente por _id de Mongo => GET
-// exports.getOneClient = (req, res) => {
-//   Client.findById(req.params.id)
-//   .populate('contactInfo.contactId')
-//   .populate('policies.policyId')
-//     .then(client => {
-//       // client.cleanPolicies(client.policies)
-//       console.log(client)
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         text: "Error en el servidor",
-//         error: err
-//       });
-//     });
-// };
-
 // Crear un nuevo cliente => POST
 exports.addClient = (req, res) => {
   if (!req.body) {

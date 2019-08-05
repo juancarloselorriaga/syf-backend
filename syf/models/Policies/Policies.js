@@ -3,12 +3,8 @@ const Schema = mongoose.Schema;
 
 const policySchema = new Schema(
   {
-    _buyer: {
-      type: String
-    },
-    _insured: {
-      type: String
-    },
+    _buyer: String,
+    _insured: String,
     _policyNumber: {
       type: String,
       required: true,
@@ -29,11 +25,11 @@ const policySchema = new Schema(
       key: String,
     },
     issuanceDate: {
-      type: Date,
+      type: String,
       required: true
     },
     expirationDate: {
-      type: Date,
+      type: String,
       required: true
     },
     paymentType: {
@@ -104,7 +100,13 @@ const policySchema = new Schema(
         type: String,
         required: true
       }
-    }
+    },
+    files: [
+      {
+        title: String,
+        path: String
+      }
+    ]
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
