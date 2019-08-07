@@ -4,6 +4,7 @@ const express    = require('express');
 const logger     = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose   = require('mongoose');
+const path      = require('path')
 
 const app = express();
 

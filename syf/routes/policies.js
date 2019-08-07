@@ -1,6 +1,6 @@
 const express   = require('express');
 const router    = express.Router();
-const multer    = require('multer')
+const multer    = require('multer');
 
 const fileFilter = function(req, file, cb) {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/bmp'];
@@ -13,7 +13,7 @@ const fileFilter = function(req, file, cb) {
   cb(null, true);
 }
 
-const MAX_SIZE = 2000000;
+const MAX_SIZE = 10000000;
 const upload = multer({
   dest: './uploads/',
   fileFilter,
@@ -30,8 +30,14 @@ router.delete('/:id', policyController.deletePolicy)
 // Editar una póliza por _id de Mongo
 router.put('/:id', policyController.editPolicy)
 
-// Añadir archivos a la póliza
+// Añadir un archivo a la póliza
 router.post('/:id/add-file', upload.single('file'), policyController.addFile)
+
+// Añadir varios archivos a la póliza
+router.post('/:id/add-files', upload.array('files'), policyController.addFiles)
+
+// Añadir varios archivos a la póliza y guardarlos en AWS
+router.post('/:id/save-file', upload.single('file'), policyController.addAndUploadFile)
 
 // Ver archivos de la póliza
 router.get('/:id/files', policyController.getFiles)
