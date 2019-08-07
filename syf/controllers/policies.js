@@ -85,30 +85,38 @@ exports.addAndUploadFile = async (req, res) => {
 
   const s3 = new AWS.S3();
   const now = Date.now()
-  console.log(req.file)
 
   try{
     if(req.file.mimetype === 'application/pdf'){
-      const readFile = await fs.readFile(req.file.path, function(err, data){
-        if(err){
-          throw err;
-        }
 
-        var base64data = new Buffer(data, 'binary');
-
-        const s3res = s3.upload({
-        Bucket: `${process.env.AWS_BUCKET}`,
-        Key: `${req.params.id}/${now}-${req.file.originalname}`,
-        Body: base64data,
-        ContentType: 'application/pdf',
-        ACL: 'public-read'
-      }).promise();
-
-      fs.unlink(req.file.path, () => {
-        res.status(200).json({ file: s3res.Location })
+      const readFile = (path) =>
+      new Promise((resolve, reject) =>{
+        fs.readFile(path, (err, data) => {
+          if(err){
+            reject (err)
+          }
+          else resolve(data)
+        })
       })
-    }
-    )}
+
+      const fileData = await readFile(req.file.path)
+      
+      var base64data = new Buffer(fileData, 'binary');
+
+      const s3res = await s3.upload({
+      Bucket: `${process.env.AWS_BUCKET}`,
+      Key: `${req.params.id}/${now}-${req.file.originalname}`,
+      Body: base64data,
+      ContentType: 'application/pdf',
+      ACL: 'public-read'
+    }).promise();
+
+    fs.unlink(req.file.path, () => {
+      res.status(200).json({ file: s3res.Location })
+    })
+
+
+  }
     else{
       const buffer = await sharp(req.file.path)
     .toBuffer()
