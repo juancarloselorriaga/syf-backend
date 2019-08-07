@@ -67,7 +67,7 @@ exports.editPolicy = (req, res) => {
   })
 };
 
-// Añadir un archivo a la póliza8
+// Añadir un archivo a la póliza
 exports.addFile = (req, res) => {
  res.status(200).json({
    file: req.file
@@ -79,14 +79,38 @@ exports.addFiles = (req, res) => {
   res.status(200).json({ files: req.files })
  };
 
+
  // Añadir archivos a la póliza y después subirlos a AWS
 exports.addAndUploadFile = async (req, res) => {
 
   const s3 = new AWS.S3();
   const now = Date.now()
+  console.log(req.file)
 
   try{
-    const buffer = await sharp(req.file.path)
+    if(req.file.mimetype === 'application/pdf'){
+      const readFile = await fs.readFile(req.file.path, function(err, data){
+        if(err){
+          throw err;
+        }
+
+        var base64data = new Buffer(data, 'binary');
+
+        const s3res = s3.upload({
+        Bucket: `${process.env.AWS_BUCKET}`,
+        Key: `${req.params.id}/${now}-${req.file.originalname}`,
+        Body: base64data,
+        ContentType: 'application/pdf',
+        ACL: 'public-read'
+      }).promise();
+
+      fs.unlink(req.file.path, () => {
+        res.status(200).json({ file: s3res.Location })
+      })
+    }
+    )}
+    else{
+      const buffer = await sharp(req.file.path)
     .toBuffer()
 
     const s3res = await s3.upload({
@@ -99,6 +123,8 @@ exports.addAndUploadFile = async (req, res) => {
     fs.unlink(req.file.path, () => {
       res.status(200).json({ file: s3res.Location })
     })
+    }
+    
   } catch (err) {
     res.status(500).json({
       text: "Error en el servidor",
