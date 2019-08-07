@@ -30,17 +30,20 @@ router.delete('/:id', policyController.deletePolicy)
 // Editar una póliza por _id de Mongo
 router.put('/:id', policyController.editPolicy)
 
-// Añadir un archivo a la póliza
-router.post('/:id/add-file', upload.single('file'), policyController.addFile)
-
-// Añadir varios archivos a la póliza
-router.post('/:id/add-files', upload.array('files'), policyController.addFiles)
+// Añadir varios archivos a la póliza y guardarlos en AWS
+router.post('/:id/save-file', upload.single('file'), policyController.addAndUploadFile)
 
 // Añadir varios archivos a la póliza y guardarlos en AWS
 router.post('/:id/save-file', upload.single('file'), policyController.addAndUploadFile)
 
 // Ver archivos de la póliza
-router.get('/:id/files', policyController.getFiles)
+router.get('/:id/get-files', policyController.getFiles)
+
+// // Añadir un archivo a la póliza
+// router.post('/:id/add-file', upload.single('file'), policyController.addFile)
+
+// // Añadir varios archivos a la póliza
+// router.post('/:id/add-files', upload.array('files'), policyController.addFiles)
 
 
 

@@ -4,6 +4,7 @@ const fs     = require('fs')
 const sharp  = require('sharp')
 const path   = require('path')
 
+AWS.config.setPromisesDependency();
 AWS.config.update({
   accessKeyId: `${process.env.AWS_ACCESS_KEY}`,
   secretAccessKey: `${process.env.AWS_SECRET_KEY}`
@@ -90,7 +91,7 @@ exports.addAndUploadFile = async (req, res) => {
 
     const s3res = await s3.upload({
       Bucket: `${process.env.AWS_BUCKET}`,
-      Key: `${now}-${req.file.originalname}`,
+      Key: `${req.params.id}/${now}-${req.file.originalname}`,
       Body: buffer,
       ACL: 'public-read'
     }).promise();
@@ -99,11 +100,30 @@ exports.addAndUploadFile = async (req, res) => {
       res.status(200).json({ file: s3res.Location })
     })
   } catch (err) {
-    res.status(422).json({ err })
+    res.status(500).json({
+      text: "Error en el servidor",
+      err: err
+    })
   }
  }
 
 // Consultar archivos de la póliza
-exports.getFiles = (req, res) => {
+exports.getFiles = async (req, res) => {
+  try{
+    
+    const s3 = new AWS.S3();
+    const response = await s3.listObjectsV2({
+      Bucket: `${process.env.AWS_BUCKET}`,
+      Prefix: `${req.params.id}`
+    }).promise();
 
+    res.status(200).json({ 
+      text: 'Consulta de archivos exitosa',
+      policyFiles: response.Contents })    
+  } catch (err){
+      res.status(500).json({
+      text: "Error en el servidor",
+      err: err
+    });
+  }
 };
