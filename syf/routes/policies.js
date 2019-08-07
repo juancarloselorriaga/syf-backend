@@ -3,7 +3,7 @@ const router    = express.Router();
 const multer    = require('multer');
 
 const fileFilter = function(req, file, cb) {
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/bmp'];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/bmp', "application/pdf"];
 
   if(!allowedTypes.includes(file.mimetype)){
     const error = new Error('Tipo de archivo no permitido');
@@ -30,8 +30,8 @@ router.delete('/:id', policyController.deletePolicy)
 // Editar una póliza por _id de Mongo
 router.put('/:id', policyController.editPolicy)
 
-// Añadir varios archivos a la póliza y guardarlos en AWS
-router.post('/:id/save-file', upload.single('file'), policyController.addAndUploadFile)
+// Ver archivos de la póliza
+router.post('/:id/delete-file', policyController.deleteAwsFile)
 
 // Añadir varios archivos a la póliza y guardarlos en AWS
 router.post('/:id/save-file', upload.single('file'), policyController.addAndUploadFile)

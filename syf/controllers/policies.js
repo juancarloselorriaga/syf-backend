@@ -127,3 +127,27 @@ exports.getFiles = async (req, res) => {
     });
   }
 };
+
+// Eliminar un archivo de la póliza y AWS
+exports.deleteAwsFile = async (req, res) => {
+
+  var params = {
+    Bucket: `${process.env.AWS_BUCKET}`,
+    Key: `${req.body.Key}`
+  };
+
+  try{
+    const s3 = new AWS.S3();
+
+    const s3res = await s3.deleteObject(params).promise();
+    res.status(200).json({
+      text: "Elemento borrado",
+      data: s3res
+    })
+  } catch (err){
+    res.status(500).json({
+    text: "Error en el servidor",
+    err: err
+  });
+}
+};
