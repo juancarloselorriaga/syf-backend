@@ -33,11 +33,16 @@ router.put('/:id', policyController.editPolicy)
 // Ver archivos de la póliza
 router.post('/:id/delete-file', policyController.deleteAwsFile)
 
-// Añadir varios archivos a la póliza y guardarlos en AWS
+// Añadir un archivo a la póliza y guardarlos en AWS
 router.post('/:id/save-file', upload.single('file'), policyController.addAndUploadFile)
 
 // Ver archivos de la póliza
 router.get('/:id/get-files', policyController.getFiles)
+
+// Extrae información de una póliza en PDF y crea una póliza a partir de eso.
+router.post('/read-pdf', upload.single('file'), policyController.readPdf)
+
+
 
 // // Añadir un archivo a la póliza
 // router.post('/:id/add-file', upload.single('file'), policyController.addFile)

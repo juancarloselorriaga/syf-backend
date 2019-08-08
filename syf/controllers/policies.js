@@ -3,6 +3,7 @@ const AWS    = require('aws-sdk');
 const fs     = require('fs')
 const sharp  = require('sharp')
 const path   = require('path')
+const pdf = require('pdf-parse');
 
 AWS.config.setPromisesDependency();
 AWS.config.update({
@@ -65,13 +66,6 @@ exports.editPolicy = (req, res) => {
       });
     }
   })
-};
-
-// Añadir un archivo a la póliza
-exports.addFile = (req, res) => {
- res.status(200).json({
-   file: req.file
- })
 };
 
 // Añadir archivos a la póliza
@@ -185,3 +179,40 @@ exports.deleteAwsFile = async (req, res) => {
   });
 }
 };
+
+ //Extrae información de una póliza en PDF y crea una póliza a partir de eso. 
+ exports.readPdf = async (req, res) => {
+  try{
+    //Si el archivo es PDF
+    if(req.file.mimetype === 'application/pdf'){
+
+      let dataBuffer = fs.readFileSync(req.file.path);
+
+      pdf(dataBuffer).then(data => {
+        // PDF text
+        fs.unlink(req.file.path, () => {
+          res.status(200).json({
+            text: 'Lectura de PDF correcta',
+            pdfData: data.text
+          })
+        })
+      })
+
+      
+    }
+    else{
+       //Si el archivo no es PDF, manda error en el servidor.
+       res.status(500).json({
+        text: "Tipo de archivo incorrecto",
+        err: err
+      })
+    }
+   
+   
+  } catch (err) {
+    res.status(500).json({
+      text: "Error en el servidor",
+      err: err
+    })
+  }
+ }
