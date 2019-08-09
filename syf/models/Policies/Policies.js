@@ -10,15 +10,8 @@ const policySchema = new Schema(
       required: true,
       unique: true
     },
-    address: {
-      street: String,
-      number: String,
-      neighborhood: String,
-      municipality: String,
-      state: String,
-      cp: String,
-      additionalInfo: String
-    },
+    additionalInfo: String,
+    address: String,
     company: String,
     class: {
       title: String,
@@ -49,7 +42,7 @@ const policySchema = new Schema(
     },
     currency:{
       type: String,
-      enum: ['USD', 'MXN', 'EUR', 'UDI'],
+      // enum: ['USD', 'MXN', 'EUR', 'UDI'],
       required: true
     },
     hasExtraPremium: {
@@ -89,16 +82,6 @@ const policySchema = new Schema(
       },
       agentDiscount:{
         type: Number
-      }
-    },
-    class: {
-      title: {
-        type: String,
-        required: true
-      },
-      key: {
-        type: String,
-        required: true
       }
     },
     files: [

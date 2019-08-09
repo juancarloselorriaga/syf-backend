@@ -66,13 +66,8 @@ clientSchema.methods.addNewPolicy = function(req, res, client) {
   let policy = new Policy();
 
   policy._policyNumber = req.body._policyNumber
-  policy.address.street = req.body.address.street;
-  policy.address.number = req.body.address.number;
-  policy.address.neighborhood = req.body.address.neighborhood;
-  policy.address.municipality = req.body.address.municipality;
-  policy.address.state = req.body.address.state;
-  policy.address.cp = req.body.address.cp;
-  policy.address.additionalInfo = req.body.address.additionalInfo;
+  policy.address = req.body.address;
+  policy.additionalInfo = req.body.additionalInfo;
   policy.company = req.body.company
   policy.class.title = req.body.class.title
   policy.class.key = req.body.class.key
